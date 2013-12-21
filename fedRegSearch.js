@@ -10,7 +10,7 @@
 
 var fedRegSearch = {
 
-    baseURL:  'https://www.federalregister.gov/api/v1/articles.json?per_page=500&order=relevance&fields%5B%5D=action&fields%5B%5D=agency_names&fields%5B%5D=dates&fields%5B%5D=docket_id&fields%5B%5D=publication_date&fields%5B%5D=title&fields%5B%5D=topics&fields%5B%5D=type&fields%5B%5D=comments_close_on&fields%5B%5D=html_url&conditions%5Bagencies%5D%5B%5D=environmental-protection-agency&conditions%5Bagencies%5D%5B%5D=nuclear-regulatory-commission&conditions%5Bagencies%5D%5B%5D=mine-safety-and-health-administration&conditions%5Bagencies%5D%5B%5D=federal-energy-regulatory-commission&conditions%5Bagencies%5D%5B%5D=engineers-corps&conditions%5Bagencies%5D%5B%5D=surface-mining-reclamation-and-enforcement-office',
+    baseURL:  'https://www.federalregister.gov/api/v1/articles.json?per_page=500&order=relevance&fields%5B%5D=action&fields%5B%5D=agency_names&fields%5B%5D=dates&fields%5B%5D=docket_id&fields%5B%5D=publication_date&fields%5B%5D=title&fields%5B%5D=topics&fields%5B%5D=type&fields%5B%5D=comments_close_on&fields%5B%5D=html_url&conditions%5Bagencies%5D%5B%5D=environmental-protection-agency&conditions%5Bagencies%5D%5B%5D=nuclear-regulatory-commission&conditions%5Bagencies%5D%5B%5D=mine-safety-and-health-administration&conditions%5Bagencies%5D%5B%5D=federal-energy-regulatory-commission&conditions%5Bagencies%5D%5B%5D=engineers-corps&conditions%5Bagencies%5D%5B%5D=surface-mining-reclamation-and-enforcement-office&conditions%5Bagencies%5D%5B%5D=energy-depatment',
     
     dateFormat: function(inDate) {
         var dd = inDate.getDate();
@@ -36,7 +36,7 @@ var fedRegSearch = {
             async:false,
             success: function(data) {
 
-                var agencies ={'Environmental Protection Agency':'EPA', 'Nuclear Regulatory Commission':'NRC','Mine Safety and Health Administration':'MSHA','Federal Energy Regulatory Commission':'FERC','Engineers Corps':'Army Corps','Surface Mining Reclamation and Enforcement Office':'OSM'};
+                var agencies ={'Environmental Protection Agency':'EPA', 'Nuclear Regulatory Commission':'NRC','Mine Safety and Health Administration':'MSHA','Federal Energy Regulatory Commission':'FERC','Engineers Corps':'Army Corps','Surface Mining Reclamation and Enforcement Office':'OSM','Energy Department':'DOE'};
 
                 // build the output table
                 var output = "<table class='frstyle' id='fedTable'>\n"
