@@ -1,4 +1,4 @@
-FedRegComments
+fedreg-search
 ==============
 
 Searches the Federal Register for documents from selected agencies that have opened public comment periods between the day checked and the prior Monday.
