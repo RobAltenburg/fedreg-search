@@ -6,7 +6,7 @@
   :plugins [[lein-cljsbuild "1.1.0"]]
   :cljsbuild {
     :builds [{:source-paths ["src-cljs"]
-              :compiler {:output-to "resources/public/js/main.js"
+              :compiler {:output-to "resources/public/js/fedreg-search.js"
                          :optimizations :whitespace
                          :pretty-print true}}]}
 )

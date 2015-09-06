@@ -1,4 +1,4 @@
-(ns clojurescript-ajax   
+(ns fedreg-search 
   (:import [goog.net Jsonp]))
 
 (def my-url "http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&q=http://feeds.feedburner.com/bbc")
