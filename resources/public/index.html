@@ -1,11 +1,12 @@
 <!doctype html>
-<html>
-<head>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script type="text/javascript" src="fedRegSearch.js"></script>
-    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/jquery.dataTables.min.js"></script>
-	
-	<style type="text/css">
+<html lang="en">
+    <head>
+            <meta charset="utf-8">
+                <title>Simple CLJS</title>
+                    <!--[if lt IE 9]>
+                            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                                <![endif]-->
+ 	<style type="text/css">
 		P.headers {
 		font-size:16px;
 		font-weight:bold;
@@ -43,8 +44,7 @@
 			}
 	</style>
 
-</head>
-
+   </head>
 <body>
 <P class='headers'>
 <A HREF="https://twitter.com/RobAltenburg">@RobAltenburg</A>'s 
@@ -57,17 +57,9 @@
 </P>
 <div id="datatable"></div>
 
-
-<script type="text/javascript" >
-	var today = new Date();
-	var lastTuesday =new Date(today - (7 +(today.getDay() -1) % 7) * 864e+5);
-	var dateout = "Search Dates: " + fedRegSearch.dateFormat(lastTuesday) + " to " + fedRegSearch.dateFormat(today);
-	
-	$('#dates').html(dateout); // show the search dates line
-	
-	fedRegSearch.ajaxGetTable(lastTuesday, '#datatable');
-</script>
-
+        Testing:
+            <!-- pointing to cljsbuild generated js file -->
+                <script src="js/main.js"></script>
 </body>
 
 
