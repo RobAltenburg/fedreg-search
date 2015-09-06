@@ -1,7 +1,8 @@
-./resources/public/js/
+/resources/public/js/
 pom.xml
 pom.xml.asc
 *jar
+*.js
 /lib/
 /classes/
 /target/
