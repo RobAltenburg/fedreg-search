@@ -17,4 +17,15 @@
   ([my-format minus-weeks]
     (f/unparse my-format (t/minus (l/local-now) (t/weeks minus-weeks)))))
 
+(defn time-to-url 
+  [my-time]
+
+  (str "&conditions%5Bpublication_date%5D%5Bgte%5D="
+       (f/unparse federal-formatter my-time))
+  ) 
+
+(defn one-week-ago
+  []
+  (time-to-url (t/minus (l/local-now) (t/weeks 1))))
+
 
