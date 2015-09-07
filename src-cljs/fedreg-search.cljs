@@ -24,8 +24,6 @@
       (let [agency (first my-keys)]
       (recur (str url "&conditions%5Bagencies%5D%5B%5D=" (agencies agency)) (rest my-keys))))))
 
-
-
 ;; write the initial HTML
 
 ;; elements we will set at runtime
@@ -49,6 +47,24 @@
   (new js/google.visualization.Table data-element))
 )
 
+(defn filter-results
+  [in-vector out-vector]
+  (if (= 0 (count in-vector))
+    out-vector
+    (do
+      (let 
+        [my-map (first in-vector)]
+        (recur 
+          (rest in-vector)
+          (conj out-vector
+            (vector 
+              (get my-map "title")
+              (get my-map "action")
+              (first (get my-map "agency_names"))
+              (get my-map "docket_id")
+              (get my-map "comments_close_on")
+              (get my-map "publication_date"))))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ajax code 
@@ -59,7 +75,8 @@
   (let 
     [clj-resp (js->clj response {:kewordize-keys true})]
     (set! data-element.innerHTML (str 
-        clj-resp 
+        (keys clj-resp) "<p>"
+        (filter-results (get clj-resp "results") [])
         ))
     ;(.log js/console (str "Success:" clj-resp ))
     ))
