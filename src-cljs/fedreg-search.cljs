@@ -45,9 +45,35 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; main
 
-(set! dates-element.innerHTML (str (my-time-string us-formatter 1) " to " (my-time-string us-formatter)))
+  (set! dates-element.innerHTML (str (my-time-string us-formatter 1) " to " (my-time-string us-formatter)))
 
 (comment "for testing, skip the json" 
 (.send (goog.net.Jsonp. my-url nil)
   "" handler err-handler nil)
 )
+
+(defn draw-chart
+" from:  https://github.com/fraburnham/google-charts"
+  [columns vectors options chart
+                  &{:keys [tooltip]
+                    :or {tooltip false}}]
+  (let [data (new js/google.visualization.DataTable)]
+    (doall ;gotta keep the doall on maps. lazy sequence...
+     (map (fn [[type name]]
+            (.addColumn data type name)) columns))
+    (if tooltip
+      (.addColumn data (clj->js {:type "string" :role "tooltip"})))
+    (.addRows data vectors)
+    (.draw chart data options)))
+
+(defn draw-demo-chart []
+(draw-chart
+   [["date" "X"] ["number" "Y"]]
+  (clj->js [[(new js/Date "07/11/14") 45] [(new js/Date "07/12/14") 15]
+ [(new js/Date "07/13/14") 23] [(new js/Date "07/14/14") 234]])
+  (clj->js {:width "100%"})
+  (new js/google.visualization.Table data-element))
+)
+
+(.load js/google "visualization" "1" (clj->js {:packages ["table"]})) ;macro or function
+(.setOnLoadCallback js/google draw-demo-chart)

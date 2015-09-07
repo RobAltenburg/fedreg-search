@@ -1,5 +1,5 @@
-(defproject closuresript-ajax "0.1.0"
-  :description "A simple example of ajax & json"
+(defproject fedreg-search "0.2.0"
+  :description "searching the federal register"
   :source-paths ["src-clj"]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2411"]
