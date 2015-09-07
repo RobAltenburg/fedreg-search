@@ -4,6 +4,7 @@
       [google-vis :as gv]
       [fedreg-time :as ft]))
 
+(.load js/google "visualization" "1" (clj->js {:packages ["table"]})) ;macro or function
 (def my-url "https://www.federalregister.gov/api/v1/articles.json?per_page=500&order=relevance&fields%5B%5D=action&fields%5B%5D=agency_names&fields%5B%5D=dates&fields%5B%5D=docket_id&fields%5B%5D=publication_date&fields%5B%5D=title&fields%5B%5D=topics&fields%5B%5D=type&fields%5B%5D=comments_close_on&fields%5B%5D=html_url&conditions%5Bagencies%5D%5B%5D=environmental-protection-agency&conditions%5Bagencies%5D%5B%5D=nuclear-regulatory-commission&conditions%5Bagencies%5D%5B%5D=mine-safety-and-health-administration&conditions%5Bagencies%5D%5B%5D=federal-energy-regulatory-commission&conditions%5Bagencies%5D%5B%5D=engineers-corps&conditions%5Bagencies%5D%5B%5D=surface-mining-reclamation-and-enforcement-office&conditions%5Bagencies%5D%5B%5D=energy-department")
 
 ; Agencies to search for
@@ -35,14 +36,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; interface with google visualization 
-(defn build-chart[]
+
+; TODO: parse the dates
+(defn build-chart
+  [in-vector]
 (gv/draw-chart
   [["string" "Title"] ["string" "Action"]
    ["string" "Agency"] ["string" "Docket ID"]
-   ["date" "Comments Close"] ["date" "Publication Date"]]
-  (clj->js 
-    [[ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]
-    [ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]])
+   ["string" "Comments Close"] ["string" "Publication Date"]]
+  (clj->js in-vector) 
   (clj->js {:width "100%"})
   (new js/google.visualization.Table data-element))
 )
@@ -74,12 +76,10 @@
   [response]
   (let 
     [clj-resp (js->clj response {:kewordize-keys true})]
-    (set! data-element.innerHTML (str 
-        (keys clj-resp) "<p>"
-        (filter-results (get clj-resp "results") [])
-        ))
-    ;(.log js/console (str "Success:" clj-resp ))
-    ))
+    
+    (.setOnLoadCallback js/google (fn []
+                                    (build-chart
+                                      (filter-results (get clj-resp "results") []))))))
 
 (defn err-handler 
   "Handle the ajax errors"
@@ -100,9 +100,6 @@
 (.send (goog.net.Jsonp. url nil)
   "" handler err-handler nil)
 
-(comment "for testing, skip the json and table-build" 
-(.load js/google "visualization" "1" (clj->js {:packages ["table"]})) ;macro or function
-(.setOnLoadCallback js/google build-chart)
-)
+
 )
 
