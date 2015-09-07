@@ -68,9 +68,12 @@
 
 (defn draw-demo-chart []
 (draw-chart
-   [["date" "X"] ["number" "Y"]]
-  (clj->js [[(new js/Date "07/11/14") 45] [(new js/Date "07/12/14") 15]
- [(new js/Date "07/13/14") 23] [(new js/Date "07/14/14") 234]])
+  [["string" "Title"] ["string" "Action"]
+   ["string" "Agency"] ["string" "Docket ID"]
+   ["date" "Comments Close"] ["date" "Publication Date"]]
+  (clj->js 
+    [[ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]
+    [ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]])
   (clj->js {:width "100%"})
   (new js/google.visualization.Table data-element))
 )
