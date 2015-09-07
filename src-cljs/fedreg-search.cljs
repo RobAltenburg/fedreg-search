@@ -14,7 +14,40 @@
 (def data-element (.getElementById js/document "datatable"))
 (def dates-element (.getElementById js/document "dates"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; interface with google visualization 
+
+(defn draw-chart
+"helper function for google visulization
+  from:  https://github.com/fraburnham/google-charts"
+  [columns vectors options chart
+                  &{:keys [tooltip]
+                    :or {tooltip false}}]
+  (let [data (new js/google.visualization.DataTable)]
+    (doall ;gotta keep the doall on maps. lazy sequence...
+     (map (fn [[type name]]
+            (.addColumn data type name)) columns))
+    (if tooltip
+      (.addColumn data (clj->js {:type "string" :role "tooltip"})))
+    (.addRows data vectors)
+    (.draw chart data options)))
+
+(defn build-chart[]
+(draw-chart
+  [["string" "Title"] ["string" "Action"]
+   ["string" "Agency"] ["string" "Docket ID"]
+   ["date" "Comments Close"] ["date" "Publication Date"]]
+  (clj->js 
+    [[ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]
+    [ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]])
+  (clj->js {:width "100%"})
+  (new js/google.visualization.Table data-element))
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; code to format time strings
+
 (def federal-formatter (f/formatter "yyyy-MM-dd"))
 (def us-formatter (f/formatter "MM-dd-yyyy"))
 
@@ -25,6 +58,9 @@
   ([my-format minus-weeks]
     (f/unparse my-format (t/minus (l/local-now) (t/weeks minus-weeks)))))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ajax code 
 
 (defn handler 
   "Handle the ajax response"
@@ -52,31 +88,7 @@
   "" handler err-handler nil)
 )
 
-(defn draw-chart
-" from:  https://github.com/fraburnham/google-charts"
-  [columns vectors options chart
-                  &{:keys [tooltip]
-                    :or {tooltip false}}]
-  (let [data (new js/google.visualization.DataTable)]
-    (doall ;gotta keep the doall on maps. lazy sequence...
-     (map (fn [[type name]]
-            (.addColumn data type name)) columns))
-    (if tooltip
-      (.addColumn data (clj->js {:type "string" :role "tooltip"})))
-    (.addRows data vectors)
-    (.draw chart data options)))
-
-(defn draw-demo-chart []
-(draw-chart
-  [["string" "Title"] ["string" "Action"]
-   ["string" "Agency"] ["string" "Docket ID"]
-   ["date" "Comments Close"] ["date" "Publication Date"]]
-  (clj->js 
-    [[ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]
-    [ "my title" "action" "EPA" "XXX-YYY-111" (new js/Date "07/11/14") (new js/Date "07/12/14")]])
-  (clj->js {:width "100%"})
-  (new js/google.visualization.Table data-element))
-)
-
+;(comment "todo: move to ajax callback"
 (.load js/google "visualization" "1" (clj->js {:packages ["table"]})) ;macro or function
-(.setOnLoadCallback js/google draw-demo-chart)
+(.setOnLoadCallback js/google build-chart)
+;)
