@@ -26,7 +26,7 @@
 
 (defn get-agency-abbr
   [in-vector out-str]
-  (if (= [] in-vector)
+  (if (empty? in-vector)
     out-str
    (let
       [agency-to-abbr
@@ -66,12 +66,15 @@
 
 (defn filter-results
   [in-vector out-vector]
-  (if (= 0 (count in-vector))
+  (if (empty? in-vector)
     out-vector
-    (do
       (let 
-        [my-map (first in-vector)]
-        (recur 
+        [my-map (first in-vector)
+        comments-close 
+         (ft/federal-to-js (get my-map "comments_close_on"))]
+         (if (clojure.string/blank? comments-close)
+          (recur (rest in-vector) out-vector) 
+         (recur 
           (rest in-vector)
           (conj out-vector
             (vector 
@@ -86,8 +89,9 @@
                       docket
                       "No Docket Id.")
                     "</a>")
-              (ft/federal-to-js (get my-map "comments_close_on"))
-              (ft/federal-to-js (get my-map "publication_date")))))))))
+             comments-close
+              (ft/federal-to-js (get my-map "publication_date"))
+              )))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
