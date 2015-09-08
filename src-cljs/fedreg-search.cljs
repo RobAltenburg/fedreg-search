@@ -53,13 +53,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; interface with google visualization 
 
-; TODO: parse the dates
 (defn build-chart
   [in-vector]
 (gv/draw-chart
   [["string" "Title"] ["string" "Action"]
    ["string" "Agency"] ["string" "Docket ID"]
-   ["string" "Comments Close"] ["string" "Publication Date"]]
+   ["date" "Comments Close"] ["date" "Publication Date"]]
   (clj->js in-vector) 
   (clj->js {:allowHtml true :width "100%"})
   (new js/google.visualization.Table data-element))
@@ -87,8 +86,8 @@
                       docket
                       "No Docket Id.")
                     "</a>")
-              (get my-map "comments_close_on")
-              (get my-map "publication_date"))))))))
+              (ft/federal-to-js (get my-map "comments_close_on"))
+              (ft/federal-to-js (get my-map "publication_date")))))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

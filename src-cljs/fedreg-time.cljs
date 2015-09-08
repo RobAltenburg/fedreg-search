@@ -17,6 +17,12 @@
   ([my-format minus-weeks]
     (f/unparse my-format (t/minus (l/local-now) (t/weeks minus-weeks)))))
 
+(defn federal-to-js
+  [in-string]
+  (if (clojure.string/blank? in-string)
+    nil
+    (f/parse federal-formatter in-string)))
+
 (defn time-to-url 
   [my-time]
 
