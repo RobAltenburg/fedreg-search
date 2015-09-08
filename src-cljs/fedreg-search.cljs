@@ -60,7 +60,7 @@
    ["string" "Agency"] ["string" "Docket ID"]
    ["date" "Comments Close"] ["date" "Publication Date"]]
   (clj->js in-vector) 
-  (clj->js {:allowHtml true :width "100%"})
+  (clj->js {:allowHtml true :width "100%" :sortColumn 4})
   (new js/google.visualization.Table data-element))
 )
 
