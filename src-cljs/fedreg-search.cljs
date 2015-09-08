@@ -15,7 +15,6 @@
                 "Army Corps" "engineers-corps"
                 "OSM"   "surface-mining-reclamation-and-enforcement-office"
                 "DOE"   "energy-department"})
- 
 (defn build-url
   "combine agencies into the url"
   [url my-keys]
@@ -25,8 +24,25 @@
       (let [agency (first my-keys)]
       (recur (str url "&conditions%5Bagencies%5D%5B%5D=" (agencies agency)) (rest my-keys))))))
 
-;; write the initial HTML
+(defn get-agency-abbr
+  [in-vector out-str]
+  (if (= [] in-vector)
+    out-str
+   (let
+      [agency-to-abbr
+       {"Environmental Protection Agency" "EPA"
+       "Nuclear Regulatory Commission" "NRC"
+       "Mine Safety and Health Administration" "MSHA"
+       "Federal Energy Regulatory Commission" "FERC"
+       "Engineers Corps" "Army Corps"
+       "Surface Mining Reclamation and Enforcement Office" "OSM"
+       "Energy Department" "DOE"}]
+    
+      (if-let [agency (get agency-to-abbr (first in-vector))]
+        (recur (rest in-vector) (str out-str " " agency))
+        (recur (rest in-vector) out-str)))))
 
+;; write the initial HTML
 ;; elements we will set at runtime
 (def data-element (.getElementById js/document "datatable"))
 (def dates-element (.getElementById js/document "dates"))
@@ -45,7 +61,7 @@
    ["string" "Agency"] ["string" "Docket ID"]
    ["string" "Comments Close"] ["string" "Publication Date"]]
   (clj->js in-vector) 
-  (clj->js {:width "100%"})
+  (clj->js {:allowHtml true :width "100%"})
   (new js/google.visualization.Table data-element))
 )
 
@@ -62,8 +78,15 @@
             (vector 
               (get my-map "title")
               (get my-map "action")
-              (first (get my-map "agency_names"))
-              (get my-map "docket_id")
+              (get-agency-abbr 
+                   (get my-map "agency_names") "")
+              (str "<a href =\""
+                   (get my-map "html_url")
+                   "\">"
+                    (if-let [docket (get my-map "docket_id")]
+                      docket
+                      "No Docket Id.")
+                    "</a>")
               (get my-map "comments_close_on")
               (get my-map "publication_date"))))))))
 
