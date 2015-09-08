@@ -7,8 +7,8 @@
 (.load js/google "visualization" "1" (clj->js {:packages ["table"]})) ;macro or function
 (def my-url "https://www.federalregister.gov/api/v1/articles.json?per_page=500&order=relevance&fields%5B%5D=action&fields%5B%5D=agency_names&fields%5B%5D=dates&fields%5B%5D=docket_id&fields%5B%5D=publication_date&fields%5B%5D=title&fields%5B%5D=topics&fields%5B%5D=type&fields%5B%5D=comments_close_on&fields%5B%5D=html_url")
 
-
-(defn build-url
+(defn agency-url-string
+  "returns a string with agencies in url format"
   []
   (let [my-agencies '("environmental-protection-agency"
                 "nuclear-regulatory-commission"
@@ -112,7 +112,7 @@
 (set! dates-element.innerHTML (str (ft/my-time-string ft/us-formatter 1) " to " (ft/my-time-string ft/us-formatter)))
 
 (let
-  [url (str my-url (build-url)
+  [url (str my-url (agency-url-string)
               (ft/one-week-ago))]
 
 ;(set! data-element.innerHTML url)
